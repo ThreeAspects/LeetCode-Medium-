@@ -1,0 +1,30 @@
+class Solution {
+    public boolean isValid(String S) {
+        Stack<Character> stack=new Stack<>();
+        char[] c=S.toCharArray();
+        if(c.length<3){
+            return false;
+        }
+        for(char i:c){
+            if(i=='a'){
+                stack.push(i);
+            }else if(i=='b'){
+                if(stack.isEmpty()){
+                    return false;
+                }
+                if(stack.peek()=='a'){
+                 stack.pop();
+                stack.push(i);   
+                }
+            }else if(i=='c'){
+                if(stack.isEmpty()){
+                    return false;
+                }
+                if(stack.peek()=='b'){
+                 stack.pop();   
+                }
+            }
+        }
+        return stack.isEmpty();
+    }
+}

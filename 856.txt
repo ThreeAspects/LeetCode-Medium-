@@ -1,0 +1,25 @@
+class Solution {
+    public int scoreOfParentheses(String S) {
+        char[] c=S.toCharArray();
+        Stack<Character> stack=new Stack<>();
+        int point=0;
+        for(int i=0;i<c.length-1;){
+            if(c[i]=='('){
+                stack.push(c[i]);
+                i++;
+            }else{
+                point+=(int)Math.pow(2,stack.size()-1);
+                while(i<c.length-1&&c[i]==')'){
+                    i++;
+                    if(!stack.isEmpty()){
+                     stack.pop();   
+                    }
+                }
+            }
+        }
+        if(c[c.length-2]=='('){
+            point++;
+        }
+        return point;
+    }
+}

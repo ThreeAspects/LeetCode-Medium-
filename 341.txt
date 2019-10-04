@@ -1,0 +1,79 @@
+递归的写法
+这一题需要用到队列，使用linkedlist来实现队列。
+使用offer函数实现入队操作，用poll函数实现出队操作。
+public class NestedIterator implements Iterator<Integer> {
+    private Queue<Integer> list;
+    public NestedIterator(List<NestedInteger> nestedList) {
+        list = new LinkedList<>();
+        dfs(nestedList);
+    }
+    private void dfs(List<NestedInteger> nestedList){
+        if (nestedList == null) return;
+        for (NestedInteger nestedInteger : nestedList) {
+            if (nestedInteger.isInteger()) {
+                list.offer(nestedInteger.getInteger());
+            } else {
+                dfs(nestedInteger.getList());
+            }
+        }
+    }
+    @Override
+    public Integer next() {
+        return list.poll();
+    }
+    @Override
+    public boolean hasNext() {
+        return list.size() > 0;
+    }
+}
+
+栈的解法
+将栈顶元素作为当前活跃的元素，比如[[2, 1], 1, [2, 3]]，最开始压入栈中，然后取出了第一个元素[2, 1]，
+此时将这个元素压入栈中，成了栈顶元素，此时整个栈变成了[2,1], [1, [2, 3]]，
+我们继续遍历栈顶元素，拿到了2，发现2不是一个迭代对象，所以将2作为next，并且原迭代器中删除2，然后跳出循环。
+其实这个就是模拟递归的系统栈的一个思路，当遇到递归的时候，比如在上面碰到了[2，1],此时先将当前执行的[[2, 1], 1, [2, 3]]中[2,1]删除掉，
+然后将[2, 1]压入栈中，每次要执行的就是栈顶元素而已。
+在Java中，LinkedList不仅可以模拟队列，还可以模拟栈。
+比如元素1，2，3，4，5，按照栈的规则，输出应该是5，4，3，2，1，所以在LinkedList中我们使用offerFirst头插法，
+此时插入进去的就是5，4，3，2，1，然后我们使用pollFirst，即可从头节点获得输出5，4，3，2，1.
+其中需要注意pollFirst和poll方法是一样的，它的意思更多的是给我们明确从头节点取值
+public class NestedIterator implements Iterator<Integer> {
+    private LinkedList<Iterator<NestedInteger>> stack;
+    private Integer num;
+    private boolean flag;
+    public NestedIterator(List<NestedInteger> nestedList) {
+        // 构造一个栈 栈顶元素存放的是当前活跃的列表
+        stack = new LinkedList<>();
+        stack.add(nestedList.iterator());
+    }
+    @Override
+    public Integer next() {
+        flag = false;
+        return num;
+    }
+    @Override
+    public boolean hasNext() {
+        if (stack.isEmpty()) return false;
+        // 取出栈顶活跃的迭代器
+        while (!stack.isEmpty() && !flag) {
+            // 取出栈顶元素
+            Iterator<NestedInteger> iterator = stack.peekFirst();
+            if (!iterator.hasNext()) {
+                // 如果栈顶的迭代器已经是空了就出栈
+                stack.pollFirst();
+            } else {
+                NestedInteger next = iterator.next();
+                if (next == null) continue;
+                if (next.isInteger()) {
+                    num = next.getInteger();
+                    flag = true;
+                    iterator.remove();
+                } else {
+                    stack.offerFirst(next.getList().iterator());
+                    iterator.remove();
+                }
+            }
+        }
+        return flag;
+    }
+}
