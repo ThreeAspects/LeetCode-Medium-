@@ -1,0 +1,55 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public List<List<Integer>> zigzagLevelOrder(TreeNode root) {
+         List<List<Integer>> result = new ArrayList<>();
+        if (root == null)
+            return result;
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.add(root);
+        // 记录是否反转
+        boolean isReverse = false;
+        while (!queue.isEmpty()) {
+            LinkedList<Integer> oneLevel = new LinkedList<>();
+            // 每次都取出一层的所有数据
+            int count = queue.size();
+            for (int i = 0; i < count; i++) {
+                TreeNode node = queue.poll();
+                if (!isReverse)
+                    oneLevel.add(node.val);
+                else
+                    oneLevel.addFirst(node.val);
+                if (node.left != null)
+                    queue.add(node.left);
+                if (node.right != null)
+                    queue.add(node.right);
+            }
+            isReverse = !isReverse;
+            result.add(oneLevel);
+        }
+        return result;
+    }
+}
+
+class Solution {
+    public List<List<Integer>> zigzagLevelOrder(TreeNode root) {
+        List<List<Integer>> res = new ArrayList<>();
+        helper(res, root, 0);
+        return res;
+    }
+    private void helper(List<List<Integer>> res, TreeNode root, int depth) {
+        if (root == null) return;
+        if (res.size() == depth) res.add(new LinkedList<>());
+        if (depth % 2 == 0) res.get(depth).add(root.val);
+        else res.get(depth).add(0, root.val);
+        helper(res, root.left, depth + 1);
+        helper(res, root.right, depth + 1);
+    }
+}

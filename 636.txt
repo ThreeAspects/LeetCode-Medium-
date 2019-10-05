@@ -1,0 +1,29 @@
+遇到start入栈(function_id, timestamp)，遇到end出栈将时间累加到结果数组中。
+唯一的技巧点就是在出栈的时候需要将此栈顶（如果存在）函数的执行时间减去当前出栈的函数的执行时间
+（因为当前出栈的函数一定是内嵌在栈顶函数里的）。
+class Solution {
+    public int[] exclusiveTime(int n, List<String> logs) {
+         int[] result = new int[n];
+        if(logs == null || logs.size() == 0){
+            return result;
+        }
+        Stack<int[]> stack = new Stack<>();
+        for(int i = 0; i < logs.size(); i++){
+            String[] values = logs.get(i).split(":");
+            int fId = Integer.parseInt(values[0]);
+            String action = values[1];
+            int ts = Integer.parseInt(values[2]);
+            if(action.equals("start")){
+                stack.push(new int[]{fId, ts});
+            } else {
+                int[] temp = stack.pop();
+                int interval = ts - temp[1] + 1;
+                result[temp[0]] += interval;
+                if(!stack.isEmpty()){
+                    result[stack.peek()[0]] -= interval;
+                }
+            }
+        }
+        return result;
+    }
+}

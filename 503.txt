@@ -1,0 +1,17 @@
+class Solution {
+    public int[] nextGreaterElements(int[] nums) {
+        int[] re=new int[nums.length];
+        for(int i=0;i<nums.length;i++){
+            int count=1;
+            while(count!=nums.length&&nums[i]>=nums[(i+count)%nums.length]){
+                count++;
+            }
+            if(count==nums.length){
+                re[i]=-1;
+            }else{
+                re[i]=nums[(i+count)%nums.length];
+            }
+        }
+        return re;
+    }
+}
