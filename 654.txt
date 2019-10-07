@@ -1,0 +1,41 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public TreeNode constructMaximumBinaryTree(int[] nums) {
+        return f(nums,0,nums.length-1);
+    }
+    public TreeNode f(int[] nums,int left,int right){
+        if(left==right) return new TreeNode(nums[left]);
+        int in=index(nums,left,right);
+        TreeNode root=new TreeNode(nums[in]);
+        if(in>left){
+            root.left=f(nums,left,in-1);
+        }else{
+            root.left=null;
+        }
+        if(in<right){
+            root.right=f(nums,in+1,right);
+        }else{
+            root.right=null;
+        }
+        return root;
+    }
+    //寻找数组中最大数的下标
+    public int index(int[] nums,int left,int right){
+        int index=left,max=nums[left];
+        for(int i=left+1;i<=right;i++){
+            if(max<nums[i]){
+                max=nums[i];
+                index=i;
+            }
+        }
+        return index;
+    }
+}

@@ -1,0 +1,23 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public int findBottomLeftValue(TreeNode root) {
+        if(root.left==null&&root.right==null) return root.val;
+        if(len(root.left)>=len(root.right)){
+            return findBottomLeftValue(root.left);
+        }else{
+            return findBottomLeftValue(root.right);
+        }
+    }
+    public int len(TreeNode root){
+        if(root==null) return 0;
+        return 1+Math.max(len(root.left),len(root.right));
+    }
+}
