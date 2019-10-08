@@ -1,0 +1,19 @@
+class Solution {
+    public List<Integer> pathInZigZagTree(int label) {
+        List<Integer> list = new LinkedList<>();
+        int level=0,min=1;
+        for(;min<=label;level++){
+            min=min*2;
+        }
+        min=min/2;
+        for (; level > 1; level--, min >>= 1) {
+            list.add(0, label);
+            // 当前节点所在层的最大值
+            int max = (min << 1) - 1;
+            // 计算当前节点的父节点的值
+            label = (min >> 1) + ((max - label) >> 1);
+        }
+        list.add(0, 1);
+        return list;
+    }
+}
