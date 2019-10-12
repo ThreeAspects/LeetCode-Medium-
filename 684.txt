@@ -1,0 +1,41 @@
+此题使用并查集比较容易解决。
+对于同一棵树的所有节点来说，都拥有共同的祖先节点。
+因此，判断冗余连接的条件即为，判断新加入的边，两个节点是否有共同的祖先。
+（1）如果有共同的祖先，则说明这条边是冗余的边；
+（2）如果没有共同的祖先，则说明这两条边并未加入树中，因此进行合并操作。
+循环边的记录，获取最后出现的冗余边，就是答案。
+
+class Solution {
+    public int[] findRedundantConnection(int[][] edges) {
+        int[] re=new int[2];
+        DFS dfs=new DFS(edges.length);
+        dfs.union(edges[0][0]-1,edges[0][1]-1);
+        for(int i=1;i<edges.length;i++){
+            if(dfs.find(edges[i][0]-1)==dfs.find(edges[i][1]-1)){
+                re[0]=edges[i][0];
+                re[1]=edges[i][1];
+            }else{
+                dfs.union(edges[i][0]-1,edges[i][1]-1);
+            }
+        }
+        return re;
+    }
+}
+class DFS{
+    int[] parent;
+    public DFS(int n){
+        parent=new int[n];
+        for(int i=0;i<n;i++){
+            parent[i]=i;
+        }
+    }
+    public int find(int x){
+        if(parent[x]!=x){
+            parent[x]=find(parent[x]);
+        }
+        return parent[x];
+    }
+    public void union(int p,int q){
+        parent[find(q)]=find(p);
+    }
+}
