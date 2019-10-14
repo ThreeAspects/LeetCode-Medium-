@@ -1,0 +1,75 @@
+弗洛伊德的乌龟和兔子（循环检测）
+如果我们对 nums 进行这样的解释，即对于每对索引 i和值vi而言，“下一个”vj位于索引vi处，我们可以将此问题减少到循环检测。
+算法：
+首先，我们可以很容易地证明问题的约束意味着必须存在一个循环。因为 nums 中的每个数字都在1和n之间，所以它必须指向存在的索引。
+此外，由于0不能作为 nums 中的值出现，nums[0] 不能作为循环的一部分。
+class Solution {
+    public int findDuplicate(int[] nums) {
+        # 把nums看成是顺序存储的链表，nums中每个元素的值是下一个链表节点的地址
+        # 那么如果nums有重复值，说明链表存在环，本问题就转化为了找链表中环的入口节点，因此可以用快慢指针解决
+        # 初始时，都指向链表第一个节点nums[0]
+		int tortoise = nums[0];
+        int hare = nums[0];
+        do {
+			# 慢指针走一步，快指针走两步
+            tortoise = nums[tortoise];
+            hare = nums[nums[hare]];
+        } while (tortoise != hare);
+        # 让before，after分别指向链表开始节点，相遇节点
+        int ptr1 = nums[0];
+        int ptr2 = tortoise;
+		# before与after相遇时，相遇点就是环的入口节点
+        while (ptr1 != ptr2) {
+            ptr1 = nums[ptr1];
+            ptr2 = nums[ptr2];
+        }
+        return ptr1;
+    }
+}
+把坐标和数值之间相互转换，而由于重复数字的存在，那么一定会形成环，用快慢指针可以找到环并确定环的起始位置。
+ 根据题意，容易明白必然存在一个环，难点是如何找到这个环。
+ 把这个转换成追击问题，一下子就好解决了。
+ 在环形内，一个快，一个慢，同时出发，则必然快的能追上慢的，当追上的那刻，我们就找到了进入这个环的钥匙。
+ 
+ 
+ 
+ 
+二分法
+关键：这道题的关键是对要定位的“数”做二分，而不是对数组的索引做二分。要定位的“数”根据题意在 11 和 nn 之间，每一次二分都可以将搜索区间缩小一半。
+以 [1, 2, 2, 3, 4, 5, 6, 7] 为例，一共有 88 个数，每个数都在 11 和 77 之间。11 和 77 的中位数是 44，遍历整个数组，统计小于 44 的整数的个数，至多应该为 33 个，
+如果超过 33 个就说明重复的数存在于区间 [1,4)[1,4) （注意：左闭右开）中；否则，重复的数存在于区间 [4,7][4,7]（注意：左右都是闭）中。
+这里小于 44 的整数有 44 个（它们是 1, 2, 2, 3），因此砍掉右半区间，连中位数也砍掉。以此类推，最后区间越来越小，直到变成 11 个整数，这个整数就是我们要找的重复的数。
+public class Solution {
+    public int findDuplicate(int[] nums) {
+        int len = nums.length;
+        int left = 1;
+        int right = len - 1;
+        while (left < right) {
+            // int mid = left + (right - left) / 2;
+            int mid = (left + right) >>> 1;
+            int counter = 0;
+            for (int num : nums) {
+                if (num <= mid) {
+                    counter += 1;
+                }
+            }
+            if (counter > mid) {
+                right = mid;
+            } else {
+                left = mid + 1;
+            }
+        }
+        return left;
+    }
+}
+说明：1、在 Python 中，整除使用 // ，如果使用 / ，在不能整除的时候，会返回一个小数；
+2、之所以写成 mid = left + (right - left + 1) // 2 ，是因为下面的分支条件是：left = mid 和 right = mid - 1，如果写成 mid = left + (right - left) // 2 就会陷入死循环。我们还是以具体例子为例。
+当一个整数数组（按升序排列）的个数为奇数时，不论 mid = left + (right - left) // 2 和 mid = left + (right - left + 1) // 2 都落在了相同的一个数，大家不妨拿 [1,2,3,4,5] 做验证；
+当一个整数数组（按升序排列）的个数为偶数时：
+（1） mid = left + (right - left) // 2 找到的是中间位置偏左的元素；
+（2） mid = left + (right - left + 1) // 2 找到的是中间位置偏右的元素。
+可以拿 [1,2,3,4] 验证。
+因此如果分支是：left = mid 和 right = mid - 1，说明，当只有 2 个元素的时候，中位数不能取左边，否则会出现死循环，因此中位数的取法是 mid = left + (right - left + 1) // 2。
+如果分支是：left = mid + 1 和 right = mid，说明，当只有 2 个元素的时候，中位数不能取右边，否则会出现死循环，因此中位数的取法是 mid = left + (right - left) // 2。
+3、while left < right 一定是严格小于，这样退出循环的时候就一定有 l==r 成立，就不必纠结该返回 l 还是 r 了。
+总结一下：while left < right 一定是严格小于，最后把一个区间“夹逼”成一个数，二分法先写两个分支，再根据分支的情况，调整如何取中点。
