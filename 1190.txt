@@ -1,0 +1,36 @@
+class Solution {
+    public String reverseParentheses(String s) {
+        if(s.indexOf("(")==-1) return s;
+        Stack<String> stack=new Stack<>();
+        StringBuffer sb=new StringBuffer();
+        for(char c:s.toCharArray()){
+            if(c=='('){
+                stack.push(sb.toString());
+                stack.push(String.valueOf(c));
+                sb=new StringBuffer();
+            }else if(c==')'){
+                stack.push(sb.toString());
+                sb=new StringBuffer();
+                String temp="";
+                while(!stack.isEmpty()&&!stack.peek().equals("(")){
+                    temp=stack.pop()+temp;
+                }
+                stack.pop();
+                sb.append(temp);
+                sb.reverse();
+                stack.push(sb.toString());
+                sb=new StringBuffer();
+            }else{
+                sb.append(c);
+            }
+        }
+        if(!sb.toString().equals("")){
+            stack.push(sb.toString());
+        }
+        String re="";
+        while(!stack.isEmpty()){
+            re=stack.pop()+re;
+        }
+        return re;
+    }
+}

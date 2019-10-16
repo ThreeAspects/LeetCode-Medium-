@@ -1,0 +1,24 @@
+class Solution {
+    public String removeDuplicates(String s, int k) {
+        Stack<Integer[]> stack = new Stack<>();
+		for (char c : s.toCharArray()) {
+			int index = 1, ch = c - 'a';
+			if (!stack.isEmpty() && stack.peek()[0] == ch) {
+				index = stack.peek()[1] + 1;
+			}
+			stack.push(new Integer[] { ch, index });
+			if (stack.peek()[1] == k) {
+				for (int i = 0; i < k; i++) {
+					stack.pop();
+				}
+			}
+		}
+		// 拼接
+		StringBuffer sb = new StringBuffer();
+		for (Integer[] integers : stack) {
+			sb.append((char) (integers[0] + 'a'));
+		}
+		return sb.toString();
+    }
+}
+
