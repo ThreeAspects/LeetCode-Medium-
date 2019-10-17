@@ -1,0 +1,17 @@
+class Solution {
+    public void sortColors(int[] nums) {
+        int[] num=new int[3];
+        for(int i:nums){
+            num[i]++;
+        }
+        int k=0,l=0;
+        for(int j:num){
+            int c=j;
+            while(c>0){
+                nums[k++]=l;
+                c--;
+            }
+            l++;
+        }
+    }
+}
