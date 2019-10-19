@@ -1,0 +1,27 @@
+class Solution {
+    public int characterReplacement(String s, int k) {
+        char[] str=s.toCharArray();
+        Set<Character> set=new HashSet<>();
+        for(char i:str){
+            set.add(i);
+        }
+        int len=0;
+        for(char j:set){
+            int K=k;
+            for(int right=0,left=0;right<str.length;right++){
+                if(str[right]!=j){
+                    if(K==0){
+                        while(str[left]==j){
+                            left++;
+                        }
+                        left++;
+                    }else{
+                        K--;
+                    }
+                }
+                len=len<right-left+1? right-left+1:len;
+            }
+        }
+        return len;
+    }
+}

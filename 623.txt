@@ -1,0 +1,65 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    List<TreeNode> list=new ArrayList<>();
+    List<TreeNode> father=new ArrayList<>();
+    public TreeNode addOneRow(TreeNode root, int v, int d) {
+        if(d==1){
+            TreeNode head=new TreeNode(v);
+            head.left=root;
+            return head;
+        }
+        getchild(root,d,1);
+        getfather(root,d-1,1);
+        int index=0;
+        for(TreeNode node:father){
+            //System.out.println(node.val);
+            if(node.left!=null){
+                TreeNode t=new TreeNode(v);
+                node.left=t;
+                t.left=list.get(index++);
+            }else{
+                TreeNode t=new TreeNode(v);
+                node.left=t;
+                t.left=null;
+            }
+            if(node.right!=null){
+                TreeNode a=new TreeNode(v);
+                node.right=a;
+                a.right=list.get(index++);
+            }else{
+                TreeNode a=new TreeNode(v);
+                node.right=a;
+                a.right=null;
+            }
+        }
+        return root;
+    }
+    public void getfather(TreeNode root,int d,int depth){
+        if(root==null||depth>d){
+            return;
+        }
+        if(depth==d){
+            father.add(root);
+        }
+        getfather(root.left,d,depth+1);
+        getfather(root.right,d,depth+1);
+    }
+    public void getchild(TreeNode root,int d,int depth){
+        if(root==null||depth>d){
+            return;
+        }
+        if(depth==d){
+            list.add(root);
+        }
+        getchild(root.left,d,depth+1);
+        getchild(root.right,d,depth+1);
+    }
+}
