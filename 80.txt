@@ -1,0 +1,19 @@
+class Solution {
+    public int removeDuplicates(int[] nums) {
+        if(nums.length==0) return 0;
+        int max=nums[nums.length-1],i=0,len=nums.length;
+        while(i<nums.length){
+            int num=nums[i],count=0;
+            while(i+count<nums.length&&num==nums[i+count]){
+                if(count>=2){
+                    nums[i+count]=max+1;
+                    len--;
+                }
+                count++;
+            }
+            i=i+count;
+        }    
+        Arrays.sort(nums);
+        return len;   
+    }
+}
