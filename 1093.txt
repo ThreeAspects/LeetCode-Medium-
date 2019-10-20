@@ -1,0 +1,51 @@
+class Solution {
+    public double[] sampleStats(int[] count) {
+        double[] result = new double[5];
+
+        long sum = 0, csum = 0;
+        int min = -1, max = -1;
+        int maxCount = 0;
+        for (int i = 0; i < count.length; i++) {
+            int cnt = count[i];
+            if (cnt == 0) {
+                continue;
+            }
+            if (min == -1) {
+                min = i;
+            }
+            max = i;
+            sum += cnt * i;
+            csum += cnt;
+
+            if (maxCount < cnt) {
+                maxCount = cnt;
+                result[4] = i;
+            }
+        }
+
+        result[2] = sum * 1.0 / csum;
+
+        int curCount = 0;
+        int a = -1, b = -1;
+        for (int i = 0; i < count.length; i++) {
+            int cnt = count[i];
+            curCount += cnt;
+            if (a == -1 && curCount >= csum / 2) {
+                a = i;
+            }
+            if (b == -1 && curCount >= csum / 2 + 1) {
+                b = i;
+            }
+        }
+        if ((csum & 1) == 1) {
+            result[3] = b;
+        } else {
+            result[3] = (a + b) / 2.0;
+        }
+
+        result[0] = min;
+        result[1] = max;
+
+        return result;
+    }
+}
