@@ -1,0 +1,23 @@
+class Solution {
+    public int totalFruit(int[] tree) {
+        int max=0,now=0,count=0;
+        for(int i=0;i<tree.length;){ 
+            int tag=tree[i];
+            while(i<tree.length&&tag==tree[i]){
+                i++;
+                now++;
+            }
+            int j=i;
+            if(j<tree.length){
+                int t=tree[j];
+                while(j<tree.length&&(t==tree[j]||tag==tree[j])){
+                    j++;
+                    now++;
+                }
+            }
+            max=max<now? now:max;
+            now=0;
+        }
+        return max;
+    }
+}
