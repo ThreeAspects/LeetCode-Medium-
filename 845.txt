@@ -1,0 +1,23 @@
+class Solution {
+    public int longestMountain(int[] A) {
+        if(A.length<3) return 0;
+        int max=0;
+        for(int i=1;i<A.length-1;i++){
+            int left=i-1,right=i+1,tag=A[i];
+            if(A[left]>=tag||A[right]>=tag){
+                continue;
+            }
+            while(left>0&&A[left]>A[left-1]){
+                left--;
+            }
+            while(right<A.length-1&&A[right]>A[right+1]){
+                right++;
+            }
+            if((right-left+1)>=3&&(right-left+1)>max){
+                //System.out.println(left+" "+right);
+                max=right-left+1;
+            }
+        }
+        return max;
+    }
+}
