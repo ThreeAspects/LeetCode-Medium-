@@ -1,0 +1,14 @@
+class Solution {
+    public String complexNumberMultiply(String a, String b) {
+        int x1,y1,x2,y2;
+        String[] numa=a.split("\\+");
+        x1=Integer.valueOf(numa[0]);
+        y1=Integer.valueOf(numa[1].split("i")[0]);
+        String[] numb=b.split("\\+");
+        x2=Integer.valueOf(numb[0]);
+        y2=Integer.valueOf(numb[1].split("i")[0]);
+        int x=x1*x2-y1*y2;
+        int y=x1*y2+x2*y1;
+        return x+"+"+y+"i";
+    }
+}
