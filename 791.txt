@@ -1,0 +1,25 @@
+class Solution {
+    public String customSortString(String S, String T) {
+        String[] str=new String[26];
+        for(char j:T.toCharArray()){
+            if(str[j-'a']==null){
+                str[j-'a']=j+"";
+            }else{
+                str[j-'a']+=j;
+            }
+        }
+        StringBuffer sb=new StringBuffer();
+        for(char i:S.toCharArray()){
+            if(str[i-'a']!=null){
+                sb.append(str[i-'a']);
+            }
+            str[i-'a']="*";
+        }
+        for(String s:str){
+            if(s!=null&&!s.equals("*")){
+                sb.append(s);
+            }
+        }
+        return sb.toString();
+    }
+}

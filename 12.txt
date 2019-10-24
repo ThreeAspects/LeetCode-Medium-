@@ -1,0 +1,57 @@
+class Solution {
+    public String intToRoman(int num) {
+        StringBuffer re=new StringBuffer();
+        while(num>0){
+            if(num>=1000){
+                int top=num/1000;
+                re.append(new String(new char[top]).replace('\0', 'M'));
+                num=num%1000;
+            }else if(num<1000&&num>=100){
+                int top=num/100;
+                if(top==5){
+                    re.append("D");
+                }else if(top==4){
+                    re.append("CD");
+                }else if(top==9){
+                    re.append("CM");
+                }else if(top<4){
+                    re.append(new String(new char[top]).replace('\0', 'C'));
+                }else{
+                    re.append("D");
+                    re.append(new String(new char[top-5]).replace('\0', 'C'));
+                }
+                num=num%100;
+            }else if(num<100&&num>=10){
+                int top=num/10;
+                if(top==5){
+                    re.append("L");
+                }else if(top==4){
+                    re.append("XL");
+                }else if(top==9){
+                    re.append("XC");
+                }else if(top<4){
+                    re.append(new String(new char[top]).replace('\0', 'X'));
+                }else{
+                    re.append("L");
+                    re.append(new String(new char[top-5]).replace('\0', 'X'));
+                }
+                num=num%10;
+            }else{
+                if(num==5){
+                    re.append("V");
+                }else if(num==4){
+                    re.append("IV");
+                }else if(num==9){
+                    re.append("IX");
+                }else if(num<4){
+                    re.append(new String(new char[num]).replace('\0', 'I'));
+                }else{
+                    re.append("V");
+                    re.append(new String(new char[num-5]).replace('\0', 'I'));
+                }
+                num=num%1;
+            }
+        }
+        return re.toString();
+    }
+}

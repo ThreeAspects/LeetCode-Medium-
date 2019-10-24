@@ -1,0 +1,17 @@
+class Solution {
+    public boolean queryString(String S, int N) {
+        while(N>0){
+                int temp=N;
+                String re="";
+                while(temp>0){
+                    re=temp%2+re;
+                    temp=temp/2;
+                }
+                if(!S.contains(re)){
+                    return false;
+                }
+                N--;
+        }
+        return true;
+    }
+}
