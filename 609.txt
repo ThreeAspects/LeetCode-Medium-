@@ -1,0 +1,22 @@
+class Solution {
+    public List<List<String>> findDuplicate(String[] paths) {
+        if(paths.length==0) return new ArrayList<>();
+        Map<String,List<String>> map=new HashMap<>();
+        for(String path:paths){
+            String[] strs=path.split(" ");
+            for(int i=1;i<strs.length;i++){
+                int index=strs[i].indexOf("(");
+                String sub=strs[i].substring(index+1,strs[i].length()-1);
+                if(!map.containsKey(sub)) map.put(sub,new ArrayList<>());
+                map.get(sub).add(strs[0]+"/"+strs[i].substring(0,index));
+            }
+        }
+        List<List<String>> re=new ArrayList<>();
+        for(List<String> list:map.values()){
+            if(list.size()>=2){
+                re.add(list);
+            }
+        }
+        return re;
+    }
+}

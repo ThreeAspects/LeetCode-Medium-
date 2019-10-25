@@ -1,0 +1,22 @@
+class Solution {
+     public List<Boolean> camelMatch(String[] queries, String pattern) {
+        List<Boolean> list = new ArrayList(queries.length);
+        for(String q : queries) {
+            list.add(match(q, pattern));
+        }
+        return list;
+    }
+    
+    boolean match(String str, String p) {
+        int i = 0;
+        for(char c : str.toCharArray()) {
+            if(i < p.length()) {
+                if(c == p.charAt(i)) i++;
+                else if(c < 'a' || c > 'z') return false;
+            } else {
+                if(c < 'a' || c > 'z') return false;
+            }
+        }
+        return i >= p.length();
+    }
+}
