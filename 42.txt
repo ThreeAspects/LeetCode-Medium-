@@ -1,0 +1,67 @@
+//动态规划
+class Solution {
+    public int trap(int[] height) {
+        if(height.length==0) return 0;
+        int[] left=new int[height.length];
+        int[] right=new int[height.length];
+        left[0]=height[0];
+        for(int i=1;i<height.length;i++){
+            left[i]=Math.max(left[i-1],height[i]);
+        }
+        right[height.length-1]=height[height.length-1];
+        for(int j=height.length-2;j>=0;j--){
+            right[j]=Math.max(right[j+1],height[j]);
+        }
+        int re=0;
+        for(int i=0;i<height.length;i++){
+            re+=Math.min(left[i],right[i])-height[i];
+        }
+        return re;
+    }
+}
+
+//双指针
+class Solution {
+    public int trap(int[] height) {
+        int left=0,right=height.length-1;
+        int leftmax=0,rightmax=0;
+        int re=0;
+        while(left<right){
+            if(height[left]<height[right]){
+                if(height[left]<leftmax){
+                    re+=leftmax-height[left];
+                }else{
+                    leftmax=Math.max(leftmax,height[left]);
+                }
+                left++;
+            }else{
+                if(height[right]<rightmax){
+                    re+=rightmax-height[right];
+                }else{
+                    rightmax=Math.max(rightmax,height[right]);
+                }
+                right--;
+            }
+        }
+        return re;
+    }
+	//Stack
+	class Solution {
+    public int trap(int[] height) {
+        Stack<Integer> stack=new Stack<>();
+        int re=0,i=0;
+        while(i<height.length){
+            while(!stack.isEmpty()&&height[i]>height[stack.peek()]){
+                int index=stack.pop();
+                if(stack.isEmpty()){
+                    break;
+                }
+                int w=i-stack.peek()-1;
+                int h=Math.min(height[stack.peek()],height[i])-height[index];
+                re+=w*h;
+            }
+            stack.push(i++);
+        }
+        return re;
+    }
+}
