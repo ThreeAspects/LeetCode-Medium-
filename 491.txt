@@ -1,0 +1,48 @@
+标准dfs模板可以秒杀一切深度优先遍历问题。
+	vector<vector<int>> findSubsequences(vector<int>& nums) {
+        vector<vector<int>> paths;
+        vector<int> path;
+        DFS(paths, path, nums, 0);
+        return paths;        
+    }
+    void DFS(vector<vector<int>> &paths, vector<int> &path, vector<int> nums, int loc){
+        // 先写终止条件
+        if (loc == nums.size()){
+            paths.push_back(path);
+            return;
+        }
+        // 按顺序访问分支
+        for (int i=loc; i<nums.size(); ++i){ 
+            path.push_back(nums[i]);        // 本节点处理
+            DFS(paths, path, nums, i+1);    // 进入子分支
+            path.pop_back();                // 恢复现场
+        }
+    }
+	
+class Solution {
+    public List<List<Integer>> findSubsequences(int[] nums) {
+        List<List<Integer>> re=new ArrayList<>();
+        if(nums.length==0) return re;
+        List<Integer> list=new ArrayList<>();
+        dfs(re,nums,list,0,-101);
+        return re;
+    }
+    public void dfs(List<List<Integer>> re,int[] nums,List<Integer> list,int i,int preNum){
+        if(list.size()>=2){
+            re.add(new ArrayList<>(list));
+        }
+        if(i==nums.length) return;
+        Set<Integer> set=new HashSet<>();
+        for(int j=i;j<nums.length;j++){
+            if(set.contains(nums[j])){
+                continue;
+            }
+            if(nums[j]>=preNum){
+                set.add(nums[j]);
+                list.add(nums[j]);
+                dfs(re,nums,list,j+1,nums[j]);
+                list.remove(list.size()-1);
+            }
+        }
+    }
+}
