@@ -1,0 +1,55 @@
+class Solution {
+    int[][] weiyi={{-1,0},{1,0},{0,-1},{0,1}};
+    public List<List<Integer>> pacificAtlantic(int[][] matrix) {
+        List<List<Integer>> re=new ArrayList<>();
+        for(int i=0;i<matrix.length;i++){
+            for(int j=0;j<matrix[0].length;j++){
+                if(taipingyang(matrix,i,j,matrix[i][j])&&daxiyang(matrix,i,j,matrix[i][j])){
+                    List<Integer> list=new ArrayList<>();
+                    list.add(i);
+                    list.add(j);
+                    re.add(new ArrayList<>(list));
+                }
+            }
+        }
+        return re;
+    }
+    public boolean taipingyang(int[][] matrix,int i,int j,int previous){
+        if(i<=0||j<=0){
+            return true;
+        }
+        if(matrix[i][j]==-1) return false;
+        int temp=matrix[i][j];
+        matrix[i][j]=-1;
+        for(int k=0;k<4;k++){
+            if(i+weiyi[k][0]>=matrix.length||j+weiyi[k][1]>=matrix[0].length||matrix[i+weiyi[k][0]][j+weiyi[k][1]]>previous){
+                continue;
+            }
+            if(taipingyang(matrix,i+weiyi[k][0],j+weiyi[k][1],matrix[i+weiyi[k][0]][j+weiyi[k][1]])){
+                matrix[i][j]=temp;
+                return true;
+            }
+        }
+        matrix[i][j]=temp;
+        return false;
+    }
+    public boolean daxiyang(int[][] matrix,int i,int j,int previous){
+         if(i>=matrix.length-1||j>=matrix[0].length-1){
+            return true;
+        }
+        if(matrix[i][j]==-1) return false;
+        int temp=matrix[i][j];
+        matrix[i][j]=-1;
+        for(int k=0;k<4;k++){
+            if(i+weiyi[k][0]<0||j+weiyi[k][1]<0||matrix[i+weiyi[k][0]][j+weiyi[k][1]]>previous){
+                continue;
+            }
+            if(daxiyang(matrix,i+weiyi[k][0],j+weiyi[k][1],matrix[i+weiyi[k][0]][j+weiyi[k][1]])){
+                matrix[i][j]=temp;
+                return true;
+            }
+        }
+        matrix[i][j]=temp;
+        return false;
+    }
+}
