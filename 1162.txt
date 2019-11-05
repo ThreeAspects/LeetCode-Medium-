@@ -1,0 +1,37 @@
+class Solution {
+    int[][] weiyi={{-1,0},{1,0},{0,-1},{0,1}};
+    public int maxDistance(int[][] grid) {
+        if(grid.length==0) return -1;
+        int N=grid.length,max=0;
+        boolean haiyang=false,ludi=false;
+        Queue<Integer> queue=new LinkedList<>();
+        int[][] count=new int[N][N];
+        for(int i=0;i<N;i++){
+            for(int j=0;j<N;j++){
+                if(grid[i][j]==1){
+                    count[i][j]=0;
+                    ludi=true;
+                    queue.offer(i*N+j);
+                }else{
+                    haiyang=true;
+                    count[i][j]=-1;
+                }
+            }
+        }
+        if(!haiyang||!ludi) return -1;
+        while(!queue.isEmpty()){
+            int x=queue.peek()/N;
+            int y=queue.poll()%N;
+            for(int k=0;k<4;k++){
+                int i=x+weiyi[k][0],j=y+weiyi[k][1];
+                if(i<0||i>=N||j<0||j>=N||count[i][j]!=-1){
+                    continue;
+                }
+                count[i][j]=count[x][y]+1;
+                max=Math.max(max,count[i][j]);
+                queue.offer(i*N+j);
+            }
+        }
+        return max;
+    }
+}

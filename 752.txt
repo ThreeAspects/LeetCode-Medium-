@@ -1,0 +1,42 @@
+class Solution {
+    public int openLock(String[] deadends, String target) {
+        Set<String> set=new HashSet<>();
+        Set<String> used=new HashSet<>();
+        for(String d:deadends){
+            set.add(d);
+        }
+        if(set.contains("0000")) return -1;
+        Queue<String> queue=new LinkedList<>();
+        queue.offer(target);
+        int count=0;
+        while(!queue.isEmpty()){
+            count++;
+            int size=queue.size();
+            while(size>0){
+                String t=queue.poll();
+                size--;
+                for(int i=0;i<4;i++){
+                    List<String> m=trans(t,i);
+                    for(String n:m){
+                        if(n.equals("0000")){
+                            return count;
+                        }else if(set.contains(n)||used.contains(n)){
+                            continue;
+                        }
+                        used.add(n);
+                        queue.offer(n);
+                    }
+                }
+            }
+        }
+        return -1;
+    }
+    public List<String> trans(String str,int index){
+        List<String> list=new ArrayList<>();
+        String str1=str.substring(0,index)+(""+(str.charAt(index)-'0'+1)%10)+str.substring(index+1,str.length());
+        String str2=str.substring(0,index)+(""+(str.charAt(index)-'0'+10-1)%10)+str.substring(index+1,str.length());
+        list.add(str1);
+        list.add(str2);
+        return list;
+    }
+}
