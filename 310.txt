@@ -1,0 +1,52 @@
+题目给定的是一个无向简单图，要求找出最高树的节点，首先通过分析可以知道，最后的根节点只可能为1个或者2个。
+要求最小高度的根节点，我们反过来想，怎样才能求得最小高度呢，很容易想到从叶子节点开始往根找，
+于是就是采用分层剥削的方法，每次去除一层叶子节点，这样保证最后的节点就是我们所要的。
+
+class Solution {
+    public List<Integer> findMinHeightTrees(int n, int[][] edges) {
+        List<Integer> re=new ArrayList<>();
+        int[] degree=new int[n];
+        List<List<Integer>> graph=new ArrayList<>();
+        for(int i=0;i<n;i++){
+            List<Integer> t=new ArrayList<>();
+            graph.add(new ArrayList<>(t));
+        }
+        Queue<Integer> queue=new LinkedList<>();
+        Arrays.fill(degree,0);
+        for(int[] edge:edges){
+            graph.get(edge[0]).add(edge[1]);
+            graph.get(edge[1]).add(edge[0]);
+            degree[edge[0]]++;
+            degree[edge[1]]++;
+        }
+        for(int i=0;i<n;i++){
+            if(degree[i]==1){
+                queue.offer(i);
+            }
+        }
+        int rst=n;
+        if(rst==1){
+            re.add(0);
+        }
+        while(rst!=1&&rst!=2){
+            int len=queue.size();
+            rst-=len;
+            for(int i=0;i<len;i++){
+                int cur=queue.peek();
+                queue.poll();
+                for(int l:graph.get(cur)){
+                    if(degree[l]>0){
+                        degree[l]--;
+                    }
+                    if(degree[l]==1){
+                        queue.offer(l);
+                    }
+                }
+            }
+        }
+        while(!queue.isEmpty()){
+            re.add(queue.poll());
+        }
+        return re;
+    }
+}
