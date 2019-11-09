@@ -1,0 +1,32 @@
+动态规划问题步骤：
+寻找最优解的表示
+状态转移方程
+边界条件判断
+
+Analysis：
+具体每一段的分割长度未知，属于典型的动态规划问题。若考虑是否以当前位置的数字作为该段中的最大值，但难以保证这一段数组的区间。
+具体思路如下：
+定义 dp[i] 为子数组 A[0, i] 按照题意分割后的最大和（最优解）
+定义最后一个分割区间长度 j， 则显然 j ∈ [1, K]
+定义最后一个分割区间最大值 domainMax， 则有domainMax=max{A[i−j+1,i]}
+对于每种取值，均可更新最优解
+
+class Solution {
+    public int maxSumAfterPartitioning(int[] A, int K) {
+        int len = A.length;
+        int[] dp = new int[len];
+        for (int i = 0; i < len; i++) {
+            /* 分别计算最后一段区间长度 j ∈[1, K]时的解，并更新位置i时的最优解 */
+            int domainMax = A[i];
+            for (int j = 1; j <= K && i - j + 1 >= 0; j++) {
+                domainMax = Math.max(domainMax, A[i-j+1]);
+                if (i - j >= 0) {
+                    dp[i] = Math.max(dp[i], dp[i-j] + j*domainMax);
+                } else {
+                    dp[i] = Math.max(dp[i], j*domainMax);
+                }
+            }
+        }
+        return dp[len-1];
+    }
+}

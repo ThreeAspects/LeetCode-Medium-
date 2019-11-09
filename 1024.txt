@@ -1,0 +1,21 @@
+class Solution {
+    public int videoStitching(int[][] clips, int T) {
+        Arrays.sort(clips,((o1, o2) -> o1[0]-o2[0]));
+        int count=1;
+        int end=0;
+        int i=0;
+        int begin=0;
+        while(i<clips.length&&end<T){
+            if(clips[i][0]>begin&&clips[i][1]>end){
+                if(clips[i][0]>end){ //如果超过当前最右边界，说明不可完成
+                    break;
+                }
+                count++;
+                begin=end;
+            }
+            end=Math.max(end,clips[i][1]);
+            i++;
+        }
+        return end<T?-1:count;
+    }
+}
