@@ -1,0 +1,24 @@
+dp[i]为str[0..1]的译码方法总数
+分情况讨论：（建立最优秀子结构）
+若s[i]='0'，那么若s[i-1]='1'or'2'，则dp[i]=dp[i-2];否则return 0
+	解释：s[i-1]+s[i]唯一被译码，不增加情况
+若s[i-1]='1'，则dp[i]=dp[i-1]+dp[i-2]
+	解释：s[i-1]与s[i]分开译码，为dp[i-1]；合并译码，为dp[i-2]
+若s[i-1]='2'and '1'<=s[i]<='6'，则dp[i]=dp[i-1]+dp[i-2]
+
+class Solution {
+    public int numDecodings(String s) {
+        if (s.charAt(0) == '0') return 0;
+        int pre = 1, curr = 1;//dp[-1] = dp[0] = 1
+        for (int i = 1; i < s.length(); i++) {
+            int tmp = curr;
+            if (s.charAt(i) == '0')
+                if (s.charAt(i-1) == '1' || s.charAt(i-1) == '2') curr = pre;
+                else return 0;
+            else if (s.charAt(i-1) == '1' || (s.charAt(i-1) == '2' && s.charAt(i) >= '1' && s.charAt(i) <= '6'))
+                curr = curr + pre;
+            pre = tmp;
+        }
+        return curr;
+    }
+}
