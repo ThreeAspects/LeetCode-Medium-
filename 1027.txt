@@ -1,0 +1,20 @@
+class Solution {
+    public int longestArithSeqLength(int[] A) {
+        int[][] dp = new int[A.length][20001];
+        if (A.length < 2)
+        return 0;
+        int max = 0;
+        for (int i = 1 ; i < A.length; i++) {
+            for (int j = 0; j < i; j++) {
+                int step = A[i] - A[j] + 10000;
+                if (dp[j][step] > 0) {
+                    dp[i][step] = Math.max(dp[j][step] + 1, dp[i][step]);
+                } else {
+                    dp[i][step] = 2;
+                }
+                max = Math.max(max, dp[i][step]);
+            }
+        }
+        return max;
+    }
+}
