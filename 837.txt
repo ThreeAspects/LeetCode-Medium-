@@ -1,0 +1,21 @@
+显然爱丽丝获胜的概率只和下一轮开始前已经获得的点数 x 有关，所以我们来根据 x 模拟出结果。
+令 f(x) 表示我们已经有 x 点。当点数在 K 和 N 之间时就结束并获胜；如果超过 N 点就失败。
+核心递推式为 f(x) = (1/W)*(f(x+1) + f(x+2) + ... + f(x+W))，这是因为我们可以等概率1/W的获得从 1到 W的卡片。
+事实上，相邻结果差分后，f(x) - f(x-1) = 1/W( f(x+W)- f(x))这就能够让我们在 O(1)的时间内计算出 f(k)，通过维护分子S=f(x+1)+f(x+2)+⋯+f(x+W)。
+我们每次计算 dp[k] = S / W，同时维护分子的准确值S⇒S+f(k)−f(k+W)。
+class Solution {
+    public double new21Game(int N, int K, int W) {
+        double[] dp = new double[N + W + 1];
+        // dp[x] = the answer when Alice has x points
+        for (int k = K; k <= N; ++k)
+            dp[k] = 1.0;
+
+        double S = Math.min(N - K + 1, W);
+        // S = dp[k+1] + dp[k+2] + ... + dp[k+W]
+        for (int k = K - 1; k >= 0; --k) {
+            dp[k] = S / W;
+            S += dp[k] - dp[k + W];
+        }
+        return dp[0];
+    }
+}
