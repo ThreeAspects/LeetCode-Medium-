@@ -1,0 +1,78 @@
+通过以下两个概念来优化。
+第一个概念是 约束规划。
+这意味着对每个点的放置设置一些限制。若已经放置了一个点，下一个点只有 3 种可能：1/2/3个数字之后。
+这样做传播了_约束_ ，且减少了需要考虑的情况。我们只需要检测times= 273/3/3=27种情况，而非990990种。
+第二个概念是 回溯。
+我们假设已经放置了一或两个点使得无法摆放其他点来生成有效IP地址。这时应该做什么？ 回溯。也就是说，回到之前，改变上一个摆放点的位置。并试着继续。
+如果依然不行，则继续回溯。
+回溯(DFS)
+这是一个回溯函数backtrack(prev_pos = -1, dots = 3)的算法，该函数使用上一个放置的点prev_pos
+和待放置点的数量 dots 两个参数 :
+遍历三个有效位置curr_pos 以放置点。
+检查从上一个点到现在点中间的部分是否有效 :
+是 :
+放置该点。
+检查全部 3个点是否放好:
+是 :
+将结果添加到输出列表中。
+否 :
+继续放下一个点 backtrack(curr_pos, dots - 1)。
+回溯，移除最后一个点。
+class Solution {
+	  int n;
+	  String s;
+	  LinkedList<String> segments = new LinkedList<String>();
+	  ArrayList<String> output = new ArrayList<String>();
+	  public boolean valid(String segment) {
+		/*
+		Check if the current segment is valid :
+		1. less or equal to 255      
+		2. the first character could be '0' 
+		only if the segment is equal to '0'
+		*/
+		int m = segment.length();
+		if (m > 3)
+		  return false;
+		return (segment.charAt(0) != '0') ? (Integer.valueOf(segment) <= 255) : (m == 1);
+	  }
+	  public void update_output(int curr_pos) {
+		/*
+		Append the current list of segments 
+		to the list of solutions
+		*/
+		String segment = s.substring(curr_pos + 1, n);
+		if (valid(segment)) {
+		  segments.add(segment);
+		  output.add(String.join(".", segments));
+		  segments.removeLast();
+		}
+	  }
+	  public void backtrack(int prev_pos, int dots) {
+		/*
+		prev_pos : the position of the previously placed dot
+		dots : number of dots to place
+		*/
+		// The current dot curr_pos could be placed 
+		// in a range from prev_pos + 1 to prev_pos + 4.
+		// The dot couldn't be placed 
+		// after the last character in the string.
+		int max_pos = Math.min(n - 1, prev_pos + 4);
+		for (int curr_pos = prev_pos + 1; curr_pos < max_pos; curr_pos++) {
+		  String segment = s.substring(prev_pos + 1, curr_pos + 1);
+		  if (valid(segment)) {
+			segments.add(segment);  // place dot
+			if (dots - 1 == 0)      // if all 3 dots are placed
+			  update_output(curr_pos);  // add the solution to output
+			else
+			  backtrack(curr_pos, dots - 1);  // continue to place dots
+			segments.removeLast();  // remove the last placed dot 
+		  }
+		}
+	  }
+	  public List<String> restoreIpAddresses(String s) {
+		n = s.length();
+		this.s = s;
+		backtrack(-1, 3);
+		return output;
+	  }
+}

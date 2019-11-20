@@ -1,0 +1,18 @@
+class Solution {
+    List<List<Integer>> re=new ArrayList<>();
+    public List<List<Integer>> combinationSum(int[] candidates, int target) {
+        List<Integer> list=new ArrayList<>();
+        dfs(list,0,candidates,target,0);
+        return re;
+    }
+    public void dfs(List<Integer> list,int index,int[] candidates,int target,int sum){
+        if(sum>target) return;
+        if(sum==target) re.add(new ArrayList<>(list));
+        if(index==candidates.length) return;
+        for(int i=index;i<candidates.length;i++){
+            list.add(candidates[i]);
+            dfs(list,i,candidates,target,sum+candidates[i]);
+            list.remove(list.size()-1);
+        }
+    }
+}
