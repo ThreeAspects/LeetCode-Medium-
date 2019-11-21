@@ -1,0 +1,20 @@
+class Solution {
+    List<List<Integer>> re=new ArrayList<>();
+    public List<List<Integer>> combinationSum3(int k, int n) {
+        int[] num={1,2,3,4,5,6,7,8,9};
+        List<Integer> list=new ArrayList<>();
+        dfs(list,num,k,n,0,0,0);
+        return re;
+    }
+    public void dfs(List<Integer> list,int[] num,int k,int n,int sum,int counts,int index){
+        if(sum==n&&counts==k){
+            re.add(new ArrayList<>(list));
+            return;
+        }
+        for(int i=index;i<9;i++){
+            list.add(num[i]);
+            dfs(list,num,k,n,sum+num[i],counts+1,i+1);
+            list.remove(list.size()-1);
+        }
+    }
+}
