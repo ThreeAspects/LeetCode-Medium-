@@ -1,0 +1,25 @@
+class Solution {
+    int count=0;
+    public int numTilePossibilities(String tiles) {
+        char[] tile=tiles.toCharArray();
+        Arrays.sort(tile);
+        boolean[] used=new boolean[tile.length];
+        dfs(tile,used,0);
+        return count;
+    }
+    public void dfs(char[] tile,boolean[] used,int index){
+        if(index==tile.length){
+            return;
+        }
+        for(int i=0;i<tile.length;i++){
+            if(used[i]) continue;
+            if(i>0&&tile[i]==tile[i-1]&&!used[i-1]){
+                continue;
+            }
+            used[i]=true;
+            count++;
+            dfs(tile,used,index+1);
+            used[i]=false;
+        }
+    }
+}

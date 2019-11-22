@@ -1,0 +1,27 @@
+class Solution {
+    List<List<String>> re=new ArrayList<>();
+    public List<List<String>> partition(String s) {
+        List<String> list=new ArrayList<>();
+        dfs(s,list,0);
+        return re;
+    }
+    public void dfs(String s,List<String> list,int index){
+        if(index==s.length()){
+            re.add(new ArrayList<>(list));
+            return;
+        }
+        for(int len=1;len+index<=s.length();len++){
+            if(check(s,index,len)>0){
+                list.add(s.substring(index,index+len));
+                dfs(s,list,index+len);
+                list.remove(list.size()-1);
+            }
+        }
+    }
+    public int check(String s,int index,int len){
+        String sub=s.substring(index,index+len);
+        StringBuffer sb=new StringBuffer();
+        sb.append(sub);
+        return sub.equals(sb.reverse().toString())? len:-1;
+    }
+}

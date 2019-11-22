@@ -1,0 +1,25 @@
+class Solution {
+    List<List<Integer>> re=new ArrayList<>();
+    public List<List<Integer>> subsetsWithDup(int[] nums) {
+        Arrays.sort(nums);
+        boolean[] used=new boolean[nums.length];
+        List<Integer> list=new ArrayList<>();
+        dfs(nums,used,0,list);
+        re.add(new ArrayList<>());
+        return re;
+    }
+    public void dfs(int[] nums,boolean[] used,int index,List<Integer> list){
+        if(index==nums.length){
+            return;
+        }
+        for(int i=index;i<nums.length;i++){
+            if(i>0&&nums[i]==nums[i-1]&&!used[i-1]) continue;
+            list.add(nums[i]);
+            used[i]=true;
+            re.add(new ArrayList<>(list));
+            dfs(nums,used,i+1,list);
+            list.remove(list.size()-1);
+            used[i]=false;
+        }
+    }
+}
