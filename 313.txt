@@ -1,0 +1,34 @@
+与之相关的丑数系列都可用这个思想去解决。
+
+依据题意：
+超级丑数是指其所有质因数都是长度为 k 的质数列表 primes 中的正整数。
+而这道题有些测试用例高达1000000，遍历正常的去用常规质数查找的方案绝对是超时。
+思想：我们使用动态规划的记忆存储化思想去做当前问题。超级丑数的质因数只属于primes，所以，
+我们所得到的所有的结果，都是由1与primes当中的质数的乘积得到的。因此我们将每一个primes当中的元素进行记忆化管理，
+这是为了得到当前结果当中与primes元素相乘得到的最小值，从而确保得到的数字是按顺序的。就可以很容易的解决。
+class Solution {
+    public int nthSuperUglyNumber(int n, int[] primes) {
+        int[] dp=new int[n+1];
+		Arrays.fill(dp,Integer.MAX_VALUE);//初始化只用n+1，避免了大量内存的浪费
+        dp[0]=1;
+		//用来存储每一个可以被primes元素整除，当前位最小的index。都初始化为0，因为都得从dp[0]开始。
+        int[] store=new int[primes.length];
+        for(int i=1;i<=n;++i)
+        {
+            for(int j=0;j<store.length;++j)
+            {
+			//分别乘以不同的primes，得到这些值当中的最小值就是下一个超级丑数。
+                dp[i]=Math.min(dp[i], primes[j]*dp[store[j]]);
+            }
+            //得到超级丑数之后，还需要检查超级丑数与之前的结果除数间是否与primes当中的元素一致。如果一致就进位。
+            for(int j=0;j<store.length;++j)
+            {
+                if(dp[i]/dp[store[j]]==primes[j])
+                {
+                    store[j]++;
+                }
+            }
+        }
+        return dp[n-1];
+    }
+}

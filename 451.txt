@@ -1,0 +1,33 @@
+class Solution {
+    class My{
+        int counts;
+        char letter;
+        public My(char letter,int counts){
+            this.letter=letter;
+            this.counts=counts;
+        }
+    }
+    public String frequencySort(String s) {
+        PriorityQueue<My> heap=new PriorityQueue<>(
+            (m1,m2)->m2.counts-m1.counts
+        );
+        Map<Character,Integer> map=new HashMap<>();
+        for(char str:s.toCharArray()){
+            map.put(str,map.getOrDefault(str,0)+1);
+        }
+        for(char c:map.keySet()){
+            heap.add(new My(c,map.get(c)));
+        }
+        StringBuffer sb=new StringBuffer();
+        while(heap.size()>0){
+            My m=heap.poll();
+            int size=m.counts;
+            char c=m.letter;
+            while(size>0){
+                sb.append(c);
+                size--;
+            }
+        }
+        return sb.toString();
+    }
+}

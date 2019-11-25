@@ -1,0 +1,33 @@
+class Solution {
+    class My{
+        int count,num;
+        public My(int num,int count){
+            this.count=count;
+            this.num=num;
+        }
+    }
+    public int[] rearrangeBarcodes(int[] barcodes) {
+        Map<Integer,Integer> map=new HashMap<>();
+        for(int i:barcodes){
+            map.put(i,map.getOrDefault(i,0)+1);
+        }
+        PriorityQueue<My> heap=new PriorityQueue<>(
+            (m1,m2)->m1.count-m2.count==0? m1.num-m2.num:m2.count-m1.count
+        );
+        for(int i:map.keySet()){
+            heap.add(new My(i,map.get(i)));
+        }
+        int[] re=new int[barcodes.length];
+        int index=0;
+        while(heap.size()>=2){
+            My m1=heap.poll();
+            My m2=heap.poll();
+            re[index++]=m1.num;
+            re[index++]=m2.num;
+            if(--m1.count>0) heap.add(m1);
+            if(--m2.count>0) heap.add(m2);
+        }
+        if(heap.size()>0) re[index]=heap.poll().num;
+        return re;
+    }
+}
