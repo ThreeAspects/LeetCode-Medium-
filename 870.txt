@@ -1,0 +1,21 @@
+class Solution {
+    public int[] advantageCount(int[] A, int[] B) {
+        int[] a=new int[A.length];
+        int[][] map=new int[B.length][2];
+        for(int i=0;i<B.length;i++){
+            map[i][0]=B[i];
+            map[i][1]=i;
+        }
+        Arrays.sort(A);
+        Arrays.sort(map,(o1,o2)->o1[0]-o2[0]);
+        int left=0,right=A.length-1;
+        for(int i=A.length-1;i>=0;i--){
+            if(A[right]>map[i][0]){
+                a[map[i][1]]=A[right--];
+            }else{
+                a[map[i][1]]=A[left++];
+            }
+        }
+        return a;
+    }
+}

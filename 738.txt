@@ -1,0 +1,25 @@
+class Solution {
+    public int monotoneIncreasingDigits(int N) {
+        List<Integer> list=new ArrayList<>();
+        int num=N;
+        while(num>0){
+            list.add(0,num%10);
+            num=num/10;
+        }
+        int x=list.get(0);
+        int temp=list.get(0);
+        for(int i=1;i<list.size();i++){
+            if(list.get(i-1)<list.get(i)){
+                x=x*10+list.get(i);
+                temp=x;
+            }else if(list.get(i-1)==list.get(i)){
+                x=x*10+list.get(i);
+                temp=temp*10;
+            }else{
+                x=temp*(int)Math.pow(10,list.size()-i)-1;
+                break;
+            }
+        }
+        return x;
+    }
+}
