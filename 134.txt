@@ -1,0 +1,28 @@
+算法
+那么现在算法是很直接明了的：
+初始化 total_tank 和 curr_tank 为 0 ，并且选择 0 号加油站为起点。
+遍历所有的加油站：
+每一步中，都通过加上 gas[i] 和减去 cost[i] 来更新 total_tank 和 curr_tank 。
+如果在 i + 1 号加油站， curr_tank < 0 ，将 i + 1 号加油站作为新的起点，同时重置 curr_tank = 0 ，让油箱也清空。
+如果 total_tank < 0 ，返回 -1 ，否则返回 starting station。
+
+class Solution {
+  public int canCompleteCircuit(int[] gas, int[] cost) {
+    int n = gas.length;
+    int total_tank = 0;
+    int curr_tank = 0;
+    int starting_station = 0;
+    for (int i = 0; i < n; ++i) {
+      total_tank += gas[i] - cost[i];
+      curr_tank += gas[i] - cost[i];
+      // If one couldn't get here,
+      if (curr_tank < 0) {
+        // Pick up the next station as the starting one.
+        starting_station = i + 1;
+        // Start with an empty tank.
+        curr_tank = 0;
+      }
+    }
+    return total_tank >= 0 ? starting_station : -1;
+  }
+}
