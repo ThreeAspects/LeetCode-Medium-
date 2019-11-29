@@ -1,0 +1,29 @@
+class Solution {
+    class My{
+        int pos,s;
+        public My(int pos,int s){
+            this.pos=pos;
+            this.s=s;
+        }
+    }
+    public int carFleet(int target, int[] position, int[] speed) {
+        if(position.length==0||speed.length==0) return 0;
+        PriorityQueue<My> heap=new PriorityQueue<>(
+            (m1,m2)->m2.pos-m1.pos
+        );
+        for(int i=0;i<position.length;i++){
+            heap.add(new My(position[i],speed[i]));
+        }
+        My m=heap.poll();
+        int count=1;
+        double tag=(target-m.pos)*1.0/m.s;
+        while(heap.size()>0){
+            m=heap.poll();
+            if((target-m.pos)*1.0/m.s>tag){
+                tag=(target-m.pos)*1.0/m.s;
+                count++;
+            }
+        }
+        return count;
+    }
+}

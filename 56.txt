@@ -1,0 +1,31 @@
+class Solution {
+    public int[][] merge(int[][] intervals) {
+        if(intervals.length==0||intervals[0].length==0) return new int[0][0];
+        List<List<Integer>> list=new ArrayList<>();
+        Arrays.sort(intervals,(a1,a2)->a1[0]==a2[0]? a1[1]-a2[1]:a1[0]-a2[0]);
+        int start=intervals[0][0],end=intervals[0][1];
+        for(int i=1;i<intervals.length;i++){
+            if(intervals[i][0]<=end){
+                start=Math.min(start,intervals[i][0]);
+                end=Math.max(end,intervals[i][1]);
+            }else{
+                List<Integer> t=new ArrayList<>();
+                t.add(start);
+                t.add(end);
+                list.add(new ArrayList<>(t));
+                start=intervals[i][0];
+                end=intervals[i][1];
+            }
+        }
+        List<Integer> t=new ArrayList<>();
+        t.add(start);
+        t.add(end);
+        list.add(new ArrayList<>(t));
+        int[][] re=new int[list.size()][2];
+        for(int i=0;i<list.size();i++){
+            re[i][0]=list.get(i).get(0);
+            re[i][1]=list.get(i).get(1);
+        }
+        return re;
+    }
+}
