@@ -1,0 +1,31 @@
+解法一 蓄水池抽样法
+思路：从左向右遍历链表，每遇到一个节点，计数器cnt加1。然后生成随机数j在范围[0,…,cnt-1]中。如果j < 1 那么，取此位置。如果不是，则不取。
+概率证明：第cnt个节点被选中的概率为1/cnt。蓄水池中被选中要替换的节点的概率为1/1。综合看第cnt个节点在蓄水池中的概率为1/cnt * 1/1 = 1/cnt。
+数学归纳法：
+初步，cnt = 1时，被选中的概率1/1=1;
+归纳，假设在cnt-1时，节点被选中在蓄水池中的概率是1/(cnt-1)。由上结果，在cnt时，蓄水池中节点被替换的概率是1/cnt。
+那么，不被替换的概率是(cnt-1)/cnt。因此cnt-1时，节点保留在蓄水池中的概率为1/(cnt-1) * (cnt-1)/cnt = 1/cnt。
+因此，第cnt个节点在蓄水池中的概率为1/cnt，而前cnt-1个节点保留在蓄水池中的概率也为1/cnt。如此保证等概率。
+
+class Solution {
+    private ListNode node;
+    public Solution(ListNode head) {
+        node = head;
+    }
+    public int getRandom() {
+        ListNode res = node;
+        ListNode cur = node.next;
+        int i = 2;
+        //从第二个节点开始,每次循环替换res的概率都是1/i
+        while(cur != null){
+            Random random = new Random();
+            int ran = random.nextInt(i);
+            if(ran == 0){
+                res = cur;
+            }
+            cur = cur.next;
+            i++;
+        }
+        return res.val;
+    }
+}
